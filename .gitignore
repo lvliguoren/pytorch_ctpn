@@ -210,7 +210,6 @@ dmypy.json
 .idea/vcs.xml
 data/__init__.py
 data/dataset.py
-index.py
 model/__init__.py
 model/ctpn.pth
 model/ctpn.py
