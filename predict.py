@@ -63,4 +63,4 @@ def predict(file_path):
 
 
 if __name__ == '__main__':
-    predict('C:/Users/Administrator/Desktop/2.jpg')
+    predict('E:/TEST/VOC2007/JPEGImages/img_1003.jpg')
