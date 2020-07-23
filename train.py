@@ -15,7 +15,7 @@ val_txt_file = os.path.join(base_dir, r'VOC2007/ImageSets/Main/val.txt')
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = ctpn.CTPN(pretrained=True,pretrained_model_path='model/vgg16-397923af.pth').to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 critetion_cls = ctpn.RPN_ClS_LOSS(device)
 critetion_reg = ctpn.RPN_REG_LOSS(device)
 
@@ -36,7 +36,11 @@ def train():
     # torchvision.models.detection.fasterrcnn_resnet50_fpn()
     # model.apply(weights_init)
     model.train()
-    for epoch in range(10):
+    for epoch in range(20):
+        epoch_loss_cls = 0
+        epoch_loss_regr = 0
+        epoch_loss = 0
+        epoch_batch = 0
         for batch_idx, (imgs, clss, regs) in enumerate(dataloader):
             imgs = imgs.to(device)
             clss = clss.to(device)
@@ -51,7 +55,13 @@ def train():
             loss.backward()
             optimizer.step()
 
-            print("epoch:{}, batch_idx:{}, loss_cls:{}, loss_reg:{}, loss:{}".format(epoch, batch_idx, loss_cls, loss_reg, loss))
+            epoch_loss_cls += loss_cls.item()
+            epoch_loss_regr += loss_cls.item()
+            epoch_loss += loss.item()
+            epoch_batch += 1
+
+            print("epoch:{}, batch_idx:{}, loss_cls:{:.4f}, loss_reg:{:.4f}, loss:{:.4f}, avg_loss:{:.4f}"
+                  .format(epoch, batch_idx, loss_cls, loss_reg, loss, epoch_loss/epoch_batch))
 
             if best_loss_cls > loss_cls or best_loss_reg > loss_reg or best_loss > loss:
                 best_loss_cls = loss_cls

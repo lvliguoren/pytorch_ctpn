@@ -202,3 +202,18 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+.idea/.gitignore
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/pytorch_ctpn.iml
+.idea/vcs.xml
+data/__init__.py
+data/dataset.py
+index.py
+model/__init__.py
+model/ctpn.pth
+model/ctpn.py
+model/utils.py
+model/vgg16-397923af.pth
+train.py

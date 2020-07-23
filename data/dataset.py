@@ -54,6 +54,7 @@ class VOCDataset(Dataset):
 
     def __getitem__(self, idx):
         img_name = self.img_names[idx]
+        print(img_name)
         img_path = os.path.join(self.datadir, img_name)
         xml_path = os.path.join(self.labelsdir, img_name.replace('.jpg', '.xml'))
         gtbox, _ = readxml(xml_path)
@@ -65,6 +66,7 @@ class VOCDataset(Dataset):
         cls, reg, base_anchor = cal_rpn((h,w), (int(h/16),int(w/16)), 16, gtbox)
 
         reg = np.hstack((cls.reshape(-1,1),reg))
+
         cls = torch.from_numpy(cls).float()
         reg = torch.from_numpy(reg).float()
 
@@ -72,8 +74,8 @@ class VOCDataset(Dataset):
 
 
 if __name__ == '__main__':
-    img_path = 'E:/TEST/VOC2007/JPEGImages/img_1002.jpg'
-    xml_path = 'E:/TEST/VOC2007/Annotations/img_1002.xml'
+    img_path = 'E:/TEST/VOC2007/JPEGImages/img_1015.jpg'
+    xml_path = 'E:/TEST/VOC2007/Annotations/img_1015.xml'
     # img_path = 'C:/Users/Administrator/Desktop/VOCdevkit(1)/VOCdevkit/VOC2007/JPEGImages/img_1002.jpg'
     # xml_path = 'C:/Users/Administrator/Desktop/VOCdevkit(1)/VOCdevkit/VOC2007/Annotations/img_1002.xml'
     gtbox, _ = readxml(xml_path)
@@ -81,7 +83,7 @@ if __name__ == '__main__':
 
     h, w, c = img.shape
     cls, reg, base_anchor = cal_rpn((h, w), (int(h / 16), int(w / 16)), 16, gtbox)
-    assert len(cls) == len(base_anchor)
+
     cls_keep = (cls==1).nonzero()
     cls_anchor = base_anchor[cls_keep]
 
@@ -93,12 +95,12 @@ if __name__ == '__main__':
         cv2.line(img,(x2,y2),(x2,y1),(0,0,255),2)
 
 
-    # for gt in gtbox:
-    #     x1,y1,x2,y2 = gt[0],gt[1],gt[2],gt[3]
-    #     cv2.line(img,(x1,y2),(x2,y2),(0,0,255),2)
-    #     cv2.line(img,(x1,y1),(x2,y1),(0,0,255),2)
-    #     cv2.line(img,(x1,y2),(x1,y1),(0,0,255),2)
-    #     cv2.line(img,(x2,y2),(x2,y1),(0,0,255),2)
+    for gt in gtbox:
+        x1,y1,x2,y2 = gt[0],gt[1],gt[2],gt[3]
+        cv2.line(img,(x1,y2),(x2,y2),(0,0,255),2)
+        cv2.line(img,(x1,y1),(x2,y1),(0,0,255),2)
+        cv2.line(img,(x1,y2),(x1,y1),(0,0,255),2)
+        cv2.line(img,(x2,y2),(x2,y1),(0,0,255),2)
         # break
     cv2.imshow('image', img)
     cv2.waitKey(0)
